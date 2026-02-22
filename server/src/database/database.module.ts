@@ -6,11 +6,11 @@ import { ProductAttribute } from '../modules/products/entities/product-attribute
 import { AttributeValue } from '../modules/products/entities/attribute-value.entity';
 import { Sku } from '../modules/products/entities/sku.entity';
 import { SkuAttributeValue } from '../modules/products/entities/sku-attribute-value.entity';
- 
+
 import { PaymentOption } from '../modules/payments/entities/payment-option.entity';
 import { SkuPaymentOption } from '../modules/payments/entities/sku-payment-option.entity';
-import { Lender } from 'src/modules/emi/entities/lender.entity';
-import { EmiPlan } from 'src/modules/emi/entities/emi-plan.entity';
+import { Lender } from '../modules/emi/entities/lender.entity';
+import { EmiPlan } from '../modules/emi/entities/emi-plan.entity';
 
 @Module({
     imports: [

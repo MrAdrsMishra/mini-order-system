@@ -3,7 +3,7 @@ import {
     ManyToOne
 } from 'typeorm';
 import { Lender } from './lender.entity';
-import { Sku } from 'src/modules/products/entities/sku.entity';
+import { Sku } from '../../products/entities/sku.entity';
 
 @Entity()
 export class EmiPlan {
