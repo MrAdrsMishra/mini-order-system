@@ -53,7 +53,7 @@ The database uses PostgreSQL with TypeORM. Key entities include:
   "brand": "Apple",
   "skus": [
     {
-      "id": "sku-uuid",
+      "skuId": "sku-uuid",
       "price": 999.99,
       "stock": 50,
       "images": ["url1", "url2"],
