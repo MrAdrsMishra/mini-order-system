@@ -31,36 +31,128 @@ The database uses PostgreSQL with TypeORM. Key entities include:
 - **EmiPlan**: Financing options linked to SKUs, including duration (months), ROI, and cashback.
 - **Lender**: Financial institutions providing EMI plans.
 - **PaymentOption**: Supported payment methods (e.g., Credit Card, UPI).
-
+![alt text](image.png)
 ---
 
 ## API Endpoints
 
-### Products
-- `GET /products`: Fetch all products with their basic info.
-- `GET /products/:id`: Fetch detailed product info, including all associated SKUs and attributes.
-- `POST /products/add-product`: Create a new product.
-- `PUT /products/:id`: Update existing product details.
+### 1. Products
 
-### EMI Plans
-- `GET /emi-plan/:skuId`: Get all available EMI plans for a specific SKU.
+#### `GET /products`
+Fetch all products with a summary of their variants.
+- **Response Format**: `Array<ProductSummary>`
+- **Example Response**:
+```json
+[
+  {
+    "productId": "79b323c6-...",
+    "name": "iPhone 15 Pro",
+    "brand": "Apple",
+    "defaultSkuId": "b6a7...",
+    "defaultImage": "https://example.com/image.jpg",
+    "price": 999.99,
+    "maxDiscountPercent": 0,
+    "availableColors": ["Natural Titanium", "Blue Titanium"],
+    "availableStorages": ["128GB", "256GB"]
+  }
+]
+```
 
-### Example Response (`GET /products/:id`)
+#### `GET /products/:id`
+Fetch full details of a specific product and all its SKUs (variants).
+- **Response Format**: `ProductDetail`
+- **Example Response**:
 ```json
 {
-  "id": "uuid",
+  "productId": "79b323c6-...",
   "name": "iPhone 15 Pro",
   "brand": "Apple",
+  "description": "The latest iPhone with Titanium design...",
+  "processor": "A17 Pro",
+  "battery": "3274 mAh",
+  "charging": "20W Wired",
+  "networks": "5G, LTE",
+  "camera": "48MP Main",
+  "display": "6.1-inch OLED",
+  "sound": "Stereo Speakers",
   "skus": [
     {
-      "skuId": "sku-uuid",
+      "skuId": "b6a7...",
+      "storage": "128GB",
+      "color": "Natural Titanium",
+      "finish": "Titanium",
       "price": 999.99,
-      "stock": 50,
+      "stock": 45,
       "images": ["url1", "url2"],
-      "emiPlans": [...]
+      "emiPlans": [
+        {
+          "lender": "HDFC Bank",
+          "months": 12,
+          "roi": 14.5,
+          "cashback": 2000
+        }
+      ],
+      "paymentOptions": ["Credit Card", "Debit Card", "UPI"]
     }
   ]
 }
+```
+
+#### `POST /products/add-product`
+Create a new product with its attributes and variants.
+- **Request Body**: `AddProductDto`
+```json
+{
+  "name": "Galaxy S24 Ultra",
+  "slug": "galaxy-s24-ultra",
+  "brand": "Samsung",
+  "description": "AI-powered flagship",
+  "attributes": [
+    { "name": "Color", "values": ["Titanium Gray", "Titanium Black"] },
+    { "name": "Storage", "values": ["256GB", "512GB"] }
+  ],
+  "skus": [
+    {
+      "storage": "256GB",
+      "color": "Titanium Gray",
+      "price": 129999,
+      "stock": 100,
+      "emiPlans": [
+        { "lender": "ICICI", "months": 6, "roi": 0, "cashback": 5000 }
+      ],
+      "paymentOptions": ["Net Banking", "UPI"]
+    }
+  ]
+}
+```
+- **Response**: `{ "message": "Product created successfully", "productId": "uuid" }`
+
+#### `PUT /products/:id`
+Update existing product details.
+- **Request Body**: `Partial<AddProductDto>`
+- **Response**: Updated `ProductDetail` object.
+
+---
+
+### 2. EMI Plans
+
+#### `GET /emi-plan/:skuId`
+Get all financing options for a specific variant.
+- **Response Format**: `Array<EmiPlan>`
+- **Example Response**:
+```json
+[
+  {
+    "id": "emi-uuid",
+    "months": 12,
+    "roi": 15,
+    "cashback": 1500,
+    "lender": {
+      "id": "lender-uuid",
+      "name": "Axis Bank"
+    }
+  }
+]
 ```
 
 ---
@@ -82,6 +174,10 @@ The database uses PostgreSQL with TypeORM. Key entities include:
    DATABASE_PASSWORD=yourpassword
    DATABASE_NAME=mini_order_system
    ```
+   OR
+   ```env
+   DATABASE_URL=dburl
+   ````
 4. Run in development mode: `npm run start:dev`
 
 ### Frontend Setup
